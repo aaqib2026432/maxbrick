@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Max Brick Kiln | Chadoora, Kashmir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+  :root{
+    --brick:#A64B2A;
+    --brick-dark:#7A331B;
+    --char:#241C18;
+    --char-soft:#3A2E27;
+    --ember:#E08A3E;
+    --cream:#F7F1E6;
+    --sand:#EFE4D2;
+    --ink:#241C18;
+    --ink-soft:#6B5C4F;
+    --radius:14px;
+    --maxw:1180px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Work Sans', sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.6;
+  }
+  h1,h2,h3{
+    font-family:'Zilla Slab', serif;
+    margin:0 0 .4em;
+    color:var(--char);
+  }
+  p{margin:0 0 1em;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-size:.72rem;
+    color:var(--brick);
+    display:inline-block;
+    margin-bottom:14px;
+  }
+
+  /* signature motif: offset brick coursing, echoed throughout as dividers/icons */
+  .brick-rows{
+    display:inline-flex;
+    flex-direction:column;
+    gap:4px;
+    width:34px;
+  }
+  .brick-rows .row{ display:flex; gap:4px; }
+  .brick-rows .row span{ display:block; height:7px; background:var(--brick); flex:1; border-radius:1px; }
+  .brick-rows .row.offset{ padding-left:8px; }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    margin:0 auto 46px;
+    color:var(--brick);
+  }
+  .divider::before,.divider::after{
+    content:"";
+    height:1px;
+    width:64px;
+    background:linear-gradient(90deg, transparent, var(--brick));
+  }
+  .divider::after{ background:linear-gradient(90deg, var(--brick), transparent); }
+
+  /* brick-textured background pattern, used behind hero + footer */
+  .brick-bg{
+    background-color:var(--brick-dark);
+    background-image:
+      linear-gradient(335deg, rgba(0,0,0,.35) 23px, transparent 23px),
+      linear-gradient(155deg, rgba(0,0,0,.35) 23px, transparent 23px),
+      linear-gradient(335deg, rgba(0,0,0,.35) 23px, transparent 23px),
+      linear-gradient(155deg, rgba(0,0,0,.35) 23px, transparent 23px);
+    background-size:58px 58px;
+    background-position:0 2px, 4px 35px, 29px 31px, 34px 6px;
+  }
+
+  /* ---------- Header / Nav ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; width:100%;
+    z-index:999;
+    background:rgba(36,28,24,0.97);
+    border-bottom:1px solid rgba(224,138,62,0.35);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 24px;
+    max-width:var(--maxw);
+    margin:0 auto;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#fff;
+    text-decoration:none;
+  }
+  .brand-icon{
+    width:48px;height:48px;
+    border-radius:10px;
+    background:linear-gradient(150deg, var(--brick), var(--brick-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ember);
+    font-size:1.3rem;
+    flex-shrink:0;
+  }
+  .brand-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+  }
+  .brand-text strong{
+    font-family:'Zilla Slab', serif;
+    font-size:1.05rem;
+    letter-spacing:.02em;
+    color:#fff;
+  }
+  .brand-text span{
+    font-family:'Space Mono', monospace;
+    font-size:.62rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ember);
+  }
+
+  nav.links ul{
+    display:flex;
+    gap:6px;
+    list-style:none;
+    margin:0;padding:0;
+  }
+  nav.links a{
+    text-decoration:none;
+    color:#f2ede4;
+    font-size:.92rem;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:999px;
+    transition:background .2s ease, color .2s ease;
+  }
+  nav.links a:hover, nav.links a:focus-visible{
+    background:var(--ember);
+    color:var(--char);
+  }
+
+  .menu-icon{
+    display:none;
+    flex-direction:column;
+    gap:5px;
+    cursor:pointer;
+    padding:8px;
+    background:none;
+    border:none;
+  }
+  .menu-icon span{
+    width:26px;height:2px;
+    background:#fff;
+    display:block;
+  }
+
+  .menu-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(10,7,5,0.5);
+    z-index:1000;
+  }
+  .menu-overlay.active{ display:block; }
+
+  @media (max-width: 860px){
+    nav.links{
+      position:fixed;
+      top:0; right:-260px;
+      width:250px; height:100%;
+      background:var(--char);
+      box-shadow:-4px 0 20px rgba(0,0,0,.3);
+      transition:right .3s ease;
+      padding-top:90px;
+      z-index:1001;
+      overflow-y:auto;
+    }
+    nav.links.active{ right:0; }
+    nav.links ul{
+      flex-direction:column;
+      padding:0 20px;
+    }
+    nav.links a{ display:block; }
+    .menu-icon{ display:flex; position:relative; z-index:1002; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    margin-top:0;
+    padding:180px 0 120px;
+    position:relative;
+    overflow:hidden;
+    color:#fff;
+    text-align:center;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(20,14,11,.88) 0%, rgba(36,28,24,.82) 55%, rgba(122,51,27,.75) 100%);
+  }
+  .hero-inner{ position:relative; z-index:1; max-width:820px; margin:0 auto; padding:0 24px; }
+  .hero .kiln-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Space Mono', monospace;
+    font-size:.78rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ember);
+    background:rgba(224,138,62,0.12);
+    border:1px solid rgba(224,138,62,0.4);
+    padding:6px 16px;
+    border-radius:999px;
+    margin-bottom:22px;
+  }
+  .hero h1{
+    color:#fff;
+    font-size:clamp(2rem, 5vw, 3.3rem);
+    font-weight:700;
+    line-height:1.15;
+    margin-bottom:18px;
+  }
+  .hero p.lede{
+    color:#eadfd0;
+    font-size:1.05rem;
+    max-width:620px;
+    margin:0 auto 34px;
+  }
+  .cta-row{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:13px 26px;
+    border-radius:999px;
+    font-weight:600;
+    text-decoration:none;
+    font-size:.95rem;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{
+    background:var(--ember);
+    color:var(--char);
+    box-shadow:0 8px 20px rgba(224,138,62,0.35);
+  }
+  .btn-ghost{
+    background:transparent;
+    border:1.5px solid rgba(255,255,255,.5);
+    color:#fff;
+  }
+  .hero-contact{
+    display:flex;
+    gap:24px;
+    justify-content:center;
+    flex-wrap:wrap;
+    font-size:.9rem;
+    color:#dcd0c0;
+  }
+  .hero-contact span{ display:flex; align-items:center; gap:8px; }
+  .hero-contact i{ color:var(--ember); }
+
+  /* ---------- Sections ---------- */
+  section{ padding:86px 0; }
+  .section-head{ text-align:center; max-width:640px; margin:0 auto 20px; }
+
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:56px;
+    align-items:center;
+  }
+  .about-grid .frame{
+    position:relative;
+    border-radius:var(--radius);
+    overflow:hidden;
+    aspect-ratio:4/3;
+    background:linear-gradient(135deg, var(--brick), var(--brick-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:rgba(255,255,255,.5);
+    font-size:2.4rem;
+  }
+  .about-grid .frame img{
+    width:100%;height:100%;object-fit:cover;
+    position:absolute; inset:0;
+  }
+  @media (max-width:860px){
+    .about-grid{ grid-template-columns:1fr; }
+  }
+
+  .features{ background:#fff; }
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+  }
+  .feature-card{
+    padding:30px 22px;
+    background:var(--cream);
+    border:1px solid #e5d8c3;
+    border-radius:var(--radius);
+    text-align:left;
+  }
+  .feature-card .brick-rows{ margin-bottom:16px; }
+  .feature-card h3{ font-size:1.05rem; margin-bottom:8px; }
+  .feature-card p{ font-size:.92rem; color:var(--ink-soft); margin:0; }
+  @media (max-width:940px){
+    .feature-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:560px){
+    .feature-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- Gallery slider ---------- */
+  .gallery{ background:var(--sand); }
+  .slider{
+    max-width:920px;
+    margin:0 auto;
+    overflow:hidden;
+    border-radius:var(--radius);
+    box-shadow:0 24px 50px -24px rgba(36,28,24,.45);
+  }
+  .slider-track{
+    display:flex;
+    width:500%;
+    animation:slide 28s ease-in-out infinite;
+  }
+  .slider-track.paused{ animation-play-state:paused; }
+  .slider-track figure{
+    width:20%;
+    margin:0;
+    flex-shrink:0;
+    aspect-ratio:16/9;
+    background:linear-gradient(135deg,var(--brick),var(--brick-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:rgba(255,255,255,.55);
+    font-size:2rem;
+    position:relative;
+  }
+  .slider-track img{
+    width:100%;height:100%;object-fit:cover;
+    position:absolute; inset:0;
+  }
+  .slider-track figcaption{
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(0deg, rgba(20,14,11,.75), transparent);
+    color:#fff;
+    font-size:.85rem;
+    padding:22px 16px 10px;
+    text-align:left;
+    z-index:1;
+  }
+  @keyframes slide{
+    0%, 15%   { transform:translateX(0); }
+    20%, 35%  { transform:translateX(-20%); }
+    40%, 55%  { transform:translateX(-40%); }
+    60%, 75%  { transform:translateX(-60%); }
+    80%, 95%  { transform:translateX(-80%); }
+    100%      { transform:translateX(0); }
+  }
+
+  /* ---------- Full gallery grid ---------- */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+  .gallery-grid .tile{
+    aspect-ratio:4/3;
+    border-radius:10px;
+    overflow:hidden;
+    background:linear-gradient(135deg,var(--brick),var(--brick-dark));
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    color:rgba(255,255,255,.5);
+    font-size:1.6rem;
+  }
+  .gallery-grid .tile img{
+    width:100%;height:100%;object-fit:cover;
+    position:absolute; inset:0;
+  }
+  @media (max-width:760px){
+    .gallery-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+
+  /* ---------- Contact ---------- */
+  .contact{ background:#fff; }
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:start;
+  }
+  .contact-card{
+    background:var(--cream);
+    border:1px solid #e5d8c3;
+    border-radius:var(--radius);
+    padding:34px;
+  }
+  .contact-row{
+    display:flex;
+    gap:14px;
+    margin-bottom:20px;
+  }
+  .contact-row i{
+    color:var(--brick);
+    font-size:1.2rem;
+    margin-top:3px;
+  }
+  .contact-row strong{ display:block; font-family:'Zilla Slab', serif; font-size:1rem; margin-bottom:2px; }
+  .contact-row span{ color:var(--ink-soft); font-size:.94rem; }
+  .map-frame{
+    border-radius:var(--radius);
+    overflow:hidden;
+    border:1px solid #e5d8c3;
+    aspect-ratio:4/3;
+  }
+  .map-frame iframe{ width:100%; height:100%; border:0; }
+  @media (max-width:860px){
+    .contact-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    color:#f1e6d5;
+    padding:52px 0 26px;
+    text-align:center;
+    position:relative;
+  }
+  footer .footer-overlay{
+    position:absolute; inset:0;
+    background:rgba(20,14,11,.86);
+  }
+  footer .wrap{ position:relative; z-index:1; }
+  footer .brick-rows{ margin:0 auto 18px; }
+  footer p{ margin:0 0 6px; font-size:.92rem; }
+  footer .credit{
+    margin-top:22px;
+    font-size:.8rem;
+    color:#b39d84;
+  }
+  footer .credit a{ color:var(--ember); text-decoration:none; }
+
+  #whatsapp-icon{
+    position:fixed;
+    bottom:22px; right:22px;
+    z-index:900;
+    width:58px;height:58px;
+    border-radius:50%;
+    background:#25D366;
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.6rem;
+    text-decoration:none;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+    transition:transform .2s ease;
+  }
+  #whatsapp-icon:hover{ transform:scale(1.08); }
+
+  .skip-link{
+    position:absolute; left:-999px; top:0;
+    background:var(--ember); color:var(--char);
+    padding:10px 16px; z-index:1000;
+  }
+  .skip-link:focus{ left:10px; top:10px; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header>
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <div class="brand-icon"><i class="fa-solid fa-fire"></i></div>
+      <span class="brand-text">
+        <strong>Max Brick Kiln</strong>
+        <span>Brick No. MAX</span>
+      </span>
+    </a>
+
+    <nav class="links" id="menu">
+      <ul>
+        <li><a href="#top">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <button class="menu-icon" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<main id="main">
+  <section class="hero brick-bg" id="top">
+    <img src="images/kiln-hero.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0"
+      onerror="this.style.display='none'">
+    <div class="hero-inner">
+      <span class="kiln-tag"><i class="fa-solid fa-industry"></i> Brick No. MAX</span>
+      <h1>Max Brick Kiln</h1>
+      <p class="lede">Traditionally fired clay bricks from Chadoora, Kashmir — built for strength, sourced locally, and supplied direct from the kiln to your site.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="tel:+916006324718"><i class="fa-solid fa-phone"></i> Call Now</a>
+        <a class="btn btn-ghost" href="#contact"><i class="fa-solid fa-location-dot"></i> Get Directions</a>
+      </div>
+      <div class="hero-contact">
+        <span><i class="fa-solid fa-phone"></i> 916006324718</span>
+        <span><i class="fa-solid fa-location-dot"></i> Nowbugh, Auwan Pora, Jammu and Kashmir 191113</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why Max Brick Kiln</p>
+        <h2>Quality bricks, fired the traditional way</h2>
+      </div>
+      <div class="divider"></div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="brick-rows"><div class="row"><span></span><span></span></div><div class="row offset"><span></span><span></span></div></div>
+          <h3>Traditional Kiln Firing</h3>
+          <p>Bricks fired with time-tested methods for consistent strength and colour.</p>
+        </div>
+        <div class="feature-card">
+          <div class="brick-rows"><div class="row"><span></span><span></span></div><div class="row offset"><span></span><span></span></div></div>
+          <h3>Consistent Quality</h3>
+          <p>Every batch checked for shape, strength, and uniform finish before dispatch.</p>
+        </div>
+        <div class="feature-card">
+          <div class="brick-rows"><div class="row"><span></span><span></span></div><div class="row offset"><span></span><span></span></div></div>
+          <h3>Direct From Kiln</h3>
+          <p>Buy straight from the source — no middlemen, straightforward pricing.</p>
+        </div>
+        <div class="feature-card">
+          <div class="brick-rows"><div class="row"><span></span><span></span></div><div class="row offset"><span></span><span></span></div></div>
+          <h3>Local to Kashmir</h3>
+          <p>Serving Chadoora and the surrounding Kashmir valley with reliable supply.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about-grid">
+      <div>
+        <p class="eyebrow">About Us</p>
+        <h2>A kiln built on trust</h2>
+        <p>MAX Brick Kiln, Brick MAX, produces traditionally fired clay bricks from our yard in Kultreh, Chadoora. We work with builders, contractors, and homeowners across the Kashmir valley, supplying bricks straight from the kiln for construction of every scale.</p>
+        <p>From raw clay to the finished stack, every step is handled on site — moulding, drying, and firing — so you get bricks that are consistent, well-fired, and ready for your next build.</p>
+      </div>
+      <div class="frame">
+        <img src="images/kiln-yard.jpg" alt="MAX Brick Kiln yard" onerror="this.remove()">
+        <i class="fa-solid fa-industry" style="position:relative;z-index:0;"></i>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery" id="gallery">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">A Look at the Kiln</p>
+        <h2>Yard, firing &amp; finished bricks</h2>
+      </div>
+      <div class="divider"></div>
+
+      <div class="slider" style="margin-bottom:40px;">
+        <div class="slider-track" id="sliderTrack">
+          <figure>
+            <img src="images/slide1.jpg" alt="Kiln yard" onerror="this.remove()">
+            <i class="fa-solid fa-industry" style="position:relative;z-index:0;"></i>
+            <figcaption>Kiln yard</figcaption>
+          </figure>
+          <figure>
+            <img src="images/slide2.jpg" alt="Raw brick stacks drying" onerror="this.remove()">
+            <i class="fa-solid fa-layer-group" style="position:relative;z-index:0;"></i>
+            <figcaption>Raw brick stacks, drying</figcaption>
+          </figure>
+          <figure>
+            <img src="images/slide3.jpg" alt="Kiln firing chamber" onerror="this.remove()">
+            <i class="fa-solid fa-fire" style="position:relative;z-index:0;"></i>
+            <figcaption>Firing chamber</figcaption>
+          </figure>
+          <figure>
+            <img src="images/slide4.jpg" alt="Chimney stack" onerror="this.remove()">
+            <i class="fa-solid fa-smog" style="position:relative;z-index:0;"></i>
+            <figcaption>Chimney stack</figcaption>
+          </figure>
+          <figure>
+            <img src="images/slide5.jpg" alt="Finished bricks ready for dispatch" onerror="this.remove()">
+            <i class="fa-solid fa-truck-ramp-box" style="position:relative;z-index:0;"></i>
+            <figcaption>Finished bricks, ready for dispatch</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="tile"><img src="images/gallery1.jpg" alt="Brick kiln photo 1" onerror="this.remove()"><i class="fa-solid fa-industry"></i></div>
+        <div class="tile"><img src="images/gallery2.jpg" alt="Brick kiln photo 2" onerror="this.remove()"><i class="fa-solid fa-fire"></i></div>
+        <div class="tile"><img src="images/gallery3.jpg" alt="Brick kiln photo 3" onerror="this.remove()"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="tile"><img src="images/gallery4.jpg" alt="Brick kiln photo 4" onerror="this.remove()"><i class="fa-solid fa-truck-ramp-box"></i></div>
+        <div class="tile"><img src="images/gallery5.jpg" alt="Brick kiln photo 5" onerror="this.remove()"><i class="fa-solid fa-smog"></i></div>
+        <div class="tile"><img src="images/gallery6.jpg" alt="Brick kiln photo 6" onerror="this.remove()"><i class="fa-solid fa-mound"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Get In Touch</p>
+        <h2>Visit or call the kiln</h2>
+      </div>
+      <div class="divider"></div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-row">
+            <i class="fa-solid fa-industry"></i>
+            <div><strong>MAX Brick Kiln</strong><span>Brick </span></div>
+          </div>
+          <div class="contact-row">
+            <i class="fa-solid fa-location-dot"></i>
+            <div><strong>Address</strong><span>Nowbugh, Auwan Pora, Jammu and Kashmir 191113</span></div>
+          </div>
+          <div class="contact-row">
+            <i class="fa-solid fa-phone"></i>
+            <div><strong>Phone</strong><span>916006324718</span></div>
+          </div>
+          <div class="cta-row" style="justify-content:flex-start;margin-top:26px;">
+            <a class="btn btn-primary" href="tel:+916006324718" style="color:var(--char)"><i class="fa-solid fa-phone"></i> Call Now</a>
+            <a class="btn" href="https://wa.me/916006324718" style="background:#25D366;color:#fff;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          </div>
+        </div>
+        <div class="map-frame">
+          <iframe
+            src="https://www.google.com/maps?q=Max brick kiln+Kuzwhera%2C+Chatergam+Kultreh%2C+Chadoora%2C+Jammu+and+Kashmir+191113&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Max Brick Kiln location map"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="brick-bg">
+  <div class="footer-overlay"></div>
+  <div class="wrap">
+    <div class="brick-rows" style="margin:0 auto 18px;"><div class="row"><span></span><span></span></div><div class="row offset"><span></span><span></span></div></div>
+    <p><strong>Max Brick Kiln</strong> — Brick No. Max</p>
+    <p>Nowbugh, Auwan Pora, Jammu and Kashmir 191113</p>
+    <p>&copy; 2026 Max Brick Kiln. All rights reserved.</p>
+    <p class="credit">Developed by <a href="https://wa.me/916005027432">Er. Mohammad Aaqib Ahanger</a></p>
+  </div>
+</footer>
+
+<a id="whatsapp-icon" href="https://wa.me/916006324718" aria-label="Chat on WhatsApp">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('menu');
+  const overlay = document.getElementById('menuOverlay');
+
+  function openMenu(){
+    menu.classList.add('active');
+    overlay.classList.add('active');
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu(){
+    menu.classList.remove('active');
+    overlay.classList.remove('active');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+  menuBtn.addEventListener('click', () => {
+    menu.classList.contains('active') ? closeMenu() : openMenu();
+  });
+  overlay.addEventListener('click', closeMenu);
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  const track = document.getElementById('sliderTrack');
+  const slider = document.querySelector('.slider');
+  slider.addEventListener('mouseenter', () => track.classList.add('paused'));
+  slider.addEventListener('mouseleave', () => track.classList.remove('paused'));
+</script>
+
+</body>
+</html>
